@@ -55,10 +55,11 @@ def upload(token):
     data['name'] = input()
     sys.stdout.write('Please input the language your app uses p2=python2, p3=python3, n=node, r=ruby, h=html: ')
     data['lang'] = input()
-    data['lang'] = ACCEPTED_LANGS[data['lang']]
-    if data['lang'] == 'HTML':
+    if data['lang'] == 'h':
+        data['lang'] = ACCEPTED_LANGS[data['lang']]
         do_stuff = 5
     elif data['lang'] in ACCEPTED_LANGS:
+        data['lang'] = ACCEPTED_LANGS[data['lang']]
         sys.stdout.write('Please input the command to run the app: ')
         data['cmd'] = input()
         sys.stdout.write('Please input the port your app runs on: ')
