@@ -47,21 +47,26 @@ def upload(token):
     data = {}
     sys.stdout.write('Please input the path of the project zip file: ')
     zip_file = input()
+    if not os.path.isfile(zip_file):
+        print('Sorry that file does not exist')
+        return upload(token)
     data['files'] = open(zip_file, 'rb')
     sys.stdout.write('Please input your project name: ')
-    data['proj'] = input()
+    data['name'] = input()
     sys.stdout.write('Please input the language your app uses p2=python2, p3=python3, n=node, r=ruby, h=html: ')
     data['lang'] = input()
-    if data['lang'] == 'h':
+    data['lang'] = ACCEPTED_LANGS[data['lang']]
+    if data['lang'] == 'HTML':
         do_stuff = 5
     elif data['lang'] in ACCEPTED_LANGS:
         sys.stdout.write('Please input the command to run the app: ')
         data['cmd'] = input()
         sys.stdout.write('Please input the port your app runs on: ')
         data['port'] = input()
-        sys.stdout.write('Please input the Database your app uses n=none, p=postgres, s=sql3lite, m=mysql: ')
+        sys.stdout.write('Please input the Database your app uses .=none, n=node, p=postgres, s=sql3lite, m=mysql: ')
         data['db'] = input()
-        if db == 'n':
+        data['db'] = ACCEPTED_DBS[data['db']]
+        if db == 'none':
             do_stuff = 5
         elif data['db'] in ACCEPTED_DBS:
             sys.stdout.write('Please input the port your Database uses: ')
@@ -74,5 +79,7 @@ def upload(token):
             data['db_password'] = input()
             sys.stdout.write('Please input the environment Variable for Database Host: ')
             data['db_env'] = input()
-    headers = {'Authorization': token}
-    r = requests.post('https://backend.hellodeploy.com/backend/api/project/create/', data=data, headers=headers)
+    headers = {'authorization': 'Token ' + token}
+    r = requests.post('https://backend.hellodeploy.com/backend/api/upload/', data=data, headers=headers)
+    print(r)
+    print(r.content)
