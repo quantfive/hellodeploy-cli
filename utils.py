@@ -6,7 +6,7 @@ import os
 
 from settings import ACCEPTED_DBS, ACCEPTED_LANGS, BASE_URL
 
-if sys.argv[1] == '--local':
+if len(sys.argv) > 1 and sys.argv[1] == '--local':
     BASE_URL = 'http://localhost:8000'
 
 def login():
