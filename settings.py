@@ -1,4 +1,3 @@
-oauth='abc'
 ACCEPTED_DBS = [
     'p', 'postgres',
     's', 'sql3lite',
