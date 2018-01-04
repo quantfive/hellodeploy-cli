@@ -6,6 +6,11 @@ exists = os.path.exists('.credentials')
 if exists:
     f = open('.credentials', 'r')
     token = f.read()
-    upload(token[:-1])
+    if token[-1] == '\n':
+        token = token[:-1]
+    upload(token)
 else:
-    register()
+    token = register()
+    if token[-1] == '\n':
+        token = token[:-1]
+    upload(token)

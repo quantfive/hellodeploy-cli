@@ -19,3 +19,4 @@ ACCEPTED_LANGS = {
     'html': 'HTML',
     '.': 'none',
 }
+BASE_URL='https://backend.hellodeploy.com/backend'

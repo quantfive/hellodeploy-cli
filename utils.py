@@ -4,7 +4,10 @@ import requests
 import json
 import os
 
-from settings import ACCEPTED_DBS, ACCEPTED_LANGS
+from settings import ACCEPTED_DBS, ACCEPTED_LANGS, BASE_URL
+
+if sys.argv[1] == '--local':
+    BASE_URL = 'http://localhost:8000'
 
 def login():
     data = {}
@@ -13,7 +16,7 @@ def login():
     data['password'] = getpass.getpass(prompt='Please input your password: ')
     data['password1'] = data['password']
     data['password2'] = data['password']
-    return requests.post('https://backend.hellodeploy.com/backend/api/auth/login/', data=data)
+    return requests.post(BASE_URL + '/api/auth/login/', data=data)
 
 def signup():
     data = {}
@@ -26,7 +29,7 @@ def signup():
     data['password'] = getpass.getpass(prompt='Please input your password: ')
     data['password1'] = data['password']
     data['password2'] = data['password']
-    return requests.post('https://backend.hellodeploy.com/backend/api/auth/register/', data=data)
+    return requests.post(BASE_URL + '/api/auth/register/', data=data)
 
 def register():
     sys.stdout.write('Do you have a HelloDeploy account y/n: ')
@@ -41,6 +44,7 @@ def register():
     key = json.loads(resp.content)['key']
     f = open('.credentials', 'w')
     f.write(key)
+    return key
 
 
 def upload(token):
@@ -50,7 +54,7 @@ def upload(token):
     if not os.path.isfile(zip_file):
         print('Sorry that file does not exist')
         return upload(token)
-    data['files'] = open(zip_file, 'rb')
+    files = {'files': open(zip_file, 'rb')}
     sys.stdout.write('Please input your project name: ')
     data['name'] = input()
     sys.stdout.write('Please input the language your app uses p2=python2, p3=python3, n=node, r=ruby, h=html: ')
@@ -80,7 +84,7 @@ def upload(token):
             data['db_password'] = input()
             sys.stdout.write('Please input the environment Variable for Database Host: ')
             data['db_env'] = input()
-    headers = {'authorization': 'Token ' + token}
-    r = requests.post('https://backend.hellodeploy.com/backend/api/upload/', data=data, headers=headers)
+    headers = {'Authorization': 'Token ' + token}
+    r = requests.post(BASE_URL + '/api/upload/', data=data, headers=headers, files=files)
     print(r)
     print(r.content)
