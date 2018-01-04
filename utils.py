@@ -2,7 +2,7 @@ import sys
 import getpass
 import requests
 
-from settings import ACCEPTED_DBS, ACCEPTED_LANGS, AUTH
+from settings import ACCEPTED_DBS, ACCEPTED_LANGS
 
 def login():
     data = {}
@@ -43,9 +43,9 @@ def upload(token):
     data['proj'] = input()
     sys.stdout.write('Please input the language your app uses p2=python2, p3=python3, n=node, r=ruby, h=html: ')
     data['lang'] = input()
-    if lang == 'h':
+    if data['lang'] == 'h':
         do_stuff = 5
-    elif lang in ACCEPTED_LANGS:
+    elif data['lang'] in ACCEPTED_LANGS:
         sys.stdout.write('Please input the command to run the app: ')
         data['cmd'] = input()
         sys.stdout.write('Please input the port your app runs on: ')
@@ -54,7 +54,7 @@ def upload(token):
         data['db'] = input()
         if db == 'n':
             do_stuff = 5
-        elif db in ACCEPTED_DBS:
+        elif data['db'] in ACCEPTED_DBS:
             sys.stdout.write('Please input the port your Database uses: ')
             data['db_port'] = input()
             sys.stdout.write('Please input the name of your Database: ')
