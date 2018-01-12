@@ -5,6 +5,8 @@ ACCEPTED_DBS = {
     'sql3lite': 'sql3lite',
     'm': 'mysql',
     'mysql': 'mysql',
+    'z': 'none',
+    'none': 'none'
 }
 ACCEPTED_LANGS = {
     'p2': 'python:2',

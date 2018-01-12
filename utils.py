@@ -3,11 +3,32 @@ import getpass
 import requests
 import json
 import os
+import zipfile
 
 from settings import ACCEPTED_DBS, ACCEPTED_LANGS, BASE_URL
 
-if len(sys.argv) > 1 and sys.argv[1] == '--local':
+if '--local' in sys.argv:
     BASE_URL = 'http://localhost:8000'
+
+def zipdir(path, ziph):
+    # ziph is zipfile handle
+    for root, dirs, files in os.walk(path):
+        for file in files:
+            ziph.write(os.path.join(root, file))
+
+def extract_options():
+    f = open('.options', 'r')
+    data = f.readline()
+    if data:
+        data = json.loads(data[:-1])
+    else:
+        data = {}
+    options = f.readline()
+    if options:
+        options = json.loads(options)
+    else:
+        options = {}
+    return data, options
 
 def login():
     data = {}
@@ -47,44 +68,70 @@ def register():
     return key
 
 
-def upload(token):
-    data = {}
-    sys.stdout.write('Please input the path of the project zip file: ')
-    zip_file = input()
-    if not os.path.isfile(zip_file):
-        print('Sorry that file does not exist')
-        return upload(token)
-    files = {'files': open(zip_file, 'rb')}
-    sys.stdout.write('Please input your project name: ')
-    data['name'] = input()
-    sys.stdout.write('Please input the language your app uses p2=python2, p3=python3, n=node, r=ruby, h=html: ')
-    data['lang'] = input()
-    if data['lang'] == 'h':
+def upload(token, data, options):
+    if 'zip_option' not in options:
+        sys.stdout.write('Do you want to zip current contents(z) of dir or upload your own zip file(u): ')
+        options['zip_option'] = input()
+    if options['zip_option'] == 'z':
+        zipf = zipfile.ZipFile('.Archive.zip', 'w', zipfile.ZIP_DEFLATED)
+        zipdir('.', zipf)
+        zipf.close()
+        files = {'files': open('.Archive.zip', 'rb')}
+    elif options['zip_option'] == 'u':
+        sys.stdout.write('Please input the path of the project zip file: ')
+        options['zip_file'] = input()
+        if not os.path.isfile(options['zip_file']):
+            print('Sorry that file does not exist')
+            return upload(token, data, options)
+        files = {'files': open(options['zip_file'], 'rb')}
+    else:
+        print('Sorry, did not understand the input')
+        options.pop('zip_option')
+        return upload(token, data, options)
+    if 'name' not in data:
+        sys.stdout.write('Please input your project name: ')
+        data['name'] = input()
+    if 'lang' not in data:
+        sys.stdout.write('Please input the language your app uses p2=python2, p3=python3, n=node, r=ruby, h=html: ')
+        data['lang'] = input()
         data['lang'] = ACCEPTED_LANGS[data['lang']]
+    if data['lang'] == 'HTML':
         do_stuff = 5
-    elif data['lang'] in ACCEPTED_LANGS:
-        data['lang'] = ACCEPTED_LANGS[data['lang']]
-        sys.stdout.write('Please input the command to run the app: ')
-        data['cmd'] = input()
-        sys.stdout.write('Please input the port your app runs on: ')
-        data['port'] = input()
-        sys.stdout.write('Please input the Database your app uses .=none, n=node, p=postgres, s=sql3lite, m=mysql: ')
-        data['db'] = input()
-        data['db'] = ACCEPTED_DBS[data['db']]
+    elif data['lang'] in ACCEPTED_LANGS.values():
+        if 'cmd' not in data:
+            sys.stdout.write('Please input the command to run the app: ')
+            data['cmd'] = input()
+        if 'port' not in data:
+            sys.stdout.write('Please input the port your app runs on: ')
+            data['port'] = input()
+        if 'db' not in data:
+            sys.stdout.write('Please input the Database your app uses z=none, n=node, p=postgres, s=sql3lite, m=mysql: ')
+            data['db'] = input()
+            data['db'] = ACCEPTED_DBS[data['db']]
         if db == 'none':
             do_stuff = 5
-        elif data['db'] in ACCEPTED_DBS:
-            sys.stdout.write('Please input the port your Database uses: ')
-            data['db_port'] = input()
-            sys.stdout.write('Please input the name of your Database: ')
-            data['db_name'] = input()
-            sys.stdout.write('Please input the Database username: ')
-            data['db_username'] = input()
-            sys.stdout.write('Please input the Database password: ')
-            data['db_password'] = input()
-            sys.stdout.write('Please input the environment Variable for Database Host: ')
-            data['db_env'] = input()
+        elif data['db'] in ACCEPTED_DBS.values():
+            if 'db_port' not in data:
+                sys.stdout.write('Please input the port your Database uses: ')
+                data['db_port'] = input()
+            if 'db_name' not in data:
+                sys.stdout.write('Please input the name of your Database: ')
+                data['db_name'] = input()
+            if 'db_username' not in data:
+                sys.stdout.write('Please input the Database username: ')
+                data['db_username'] = input()
+            if 'db_password' not in data:
+                sys.stdout.write('Please input the Database password: ')
+                data['db_password'] = input()
+            if 'db_env' not in data:
+                sys.stdout.write('Please input the environment Variable for Database Host: ')
+                data['db_env'] = input()
     headers = {'Authorization': 'Token ' + token}
     r = requests.post(BASE_URL + '/api/upload/', data=data, headers=headers, files=files)
+    os.remove('.Archive.zip')
+    f = open('.options', 'w')
+    f.write(json.dumps(data) + '\n')
+    f.write(json.dumps(options))
+    f.close()
     print(r)
     print(r.content)
