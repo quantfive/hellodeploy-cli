@@ -22,3 +22,7 @@ ACCEPTED_LANGS = {
     '.': 'none',
 }
 BASE_URL='https://backend.hellodeploy.com/backend'
+
+BASE_PATH = '/Users/itaireuveni/hellodeploy/cli/'
+CRED_PATH = BASE_PATH + '.credentials'
+OPT_PATH = BASE_PATH + '.options'

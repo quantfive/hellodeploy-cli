@@ -5,7 +5,7 @@ import json
 import os
 import zipfile
 
-from settings import ACCEPTED_DBS, ACCEPTED_LANGS, BASE_URL
+from settings import ACCEPTED_DBS, ACCEPTED_LANGS, BASE_URL, CRED_PATH, OPT_PATH
 
 if '--local' in sys.argv:
     BASE_URL = 'http://localhost:8000'
@@ -17,7 +17,7 @@ def zipdir(path, ziph):
             ziph.write(os.path.join(root, file))
 
 def extract_options():
-    f = open('.options', 'r')
+    f = open(OPT_PATH, 'r')
     data = f.readline()
     if data:
         data = json.loads(data[:-1])
@@ -63,7 +63,7 @@ def register():
         print('Sorry, invalid input')
         return register()
     key = json.loads(resp.content)['key']
-    f = open('.credentials', 'w')
+    f = open(CRED_PATH, 'w')
     f.write(key)
     return key
 
