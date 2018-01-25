@@ -17,6 +17,9 @@ def zipdir(path, ziph):
             ziph.write(os.path.join(root, file))
 
 def extract_options():
+    options = os.path.exists(OPT_PATH)
+    if not options:
+        return {}, {}
     f = open(OPT_PATH, 'r')
     data = f.readline()
     if data:
