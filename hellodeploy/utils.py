@@ -111,7 +111,7 @@ def upload(token, data, options):
             sys.stdout.write('Please input the Database your app uses z=none, n=node, p=postgres, s=sql3lite, m=mysql: ')
             data['db'] = input()
             data['db'] = ACCEPTED_DBS[data['db']]
-        if db == 'none':
+        if data['db'] == 'none':
             do_stuff = 5
         elif data['db'] in ACCEPTED_DBS.values():
             if 'db_port' not in data:
