@@ -129,7 +129,7 @@ def upload(token, data, options):
     headers = {'Authorization': 'Token ' + token}
     r = requests.post(BASE_URL + '/api/upload/', data=data, headers=headers, files=files)
     os.remove('.Archive.zip')
-    f = open('.options', 'w')
+    f = open(OPT_PATH, 'w+')
     f.write(json.dumps(data) + '\n')
     f.write(json.dumps(options))
     f.close()
