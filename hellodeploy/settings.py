@@ -26,5 +26,5 @@ ACCEPTED_LANGS = {
 }
 BASE_URL='https://backend.hellodeploy.com/backend'
 
-CRED_PATH = HOME + '/.credentials'
+CRED_PATH = HOME + '/.hd_credentials'
 OPT_PATH = '.options'
