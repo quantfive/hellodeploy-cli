@@ -1,8 +1,8 @@
 import os.path
 import json
-from utils import register, upload, extract_options
 import sys
 
+from hellodeploy.utils import register, upload, extract_options
 
 def main():
     credentials = os.path.exists('.credentials')

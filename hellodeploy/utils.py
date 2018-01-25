@@ -5,7 +5,7 @@ import json
 import os
 import zipfile
 
-from settings import ACCEPTED_DBS, ACCEPTED_LANGS, BASE_URL, CRED_PATH, OPT_PATH
+from hellodeploy.settings import ACCEPTED_DBS, ACCEPTED_LANGS, BASE_URL, CRED_PATH, OPT_PATH
 
 if '--local' in sys.argv:
     BASE_URL = 'http://localhost:8000'

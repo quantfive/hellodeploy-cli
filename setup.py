@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='hellodeploy',    # This is the name of your PyPI-package.
-    version='1.2',           # Update the version number for new releases
+    version='1.3',           # Update the version number for new releases
     entry_points = {
         "console_scripts": ['hellodeploy = hellodeploy.cli:main']
     },
