@@ -3,17 +3,18 @@ import json
 import sys
 
 from hellodeploy.utils import register, upload, extract_options
+from hellodeploy.settings import CRED_PATH, OPT_PATH
 
 def main():
-    credentials = os.path.exists('.credentials')
-    options = os.path.exists('.options')
+    credentials = os.path.exists(CRED_PATH)
+    options = os.path.exists(OPT_PATH)
 
     if 'init' in sys.argv:
-        f = open('.options', 'w+')
+        f = open(OPT_PATH, 'w+')
         f.close()
 
     if credentials:
-        f = open('.credentials', 'r')
+        f = open(CRED_PATH, 'r')
         token = f.read()
         if token[-1] == '\n':
             token = token[:-1]

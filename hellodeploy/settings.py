@@ -1,3 +1,6 @@
+from os.path import expanduser
+HOME = expanduser("~")
+
 ACCEPTED_DBS = {
     'p': 'postgres',
     'postgres': 'postgres',
@@ -23,6 +26,5 @@ ACCEPTED_LANGS = {
 }
 BASE_URL='https://backend.hellodeploy.com/backend'
 
-BASE_PATH = '/Users/itaireuveni/hellodeploy/cli/'
-CRED_PATH = BASE_PATH + '.credentials'
-OPT_PATH = BASE_PATH + '.options'
+CRED_PATH = HOME + '/.credentials'
+OPT_PATH = '.options'
